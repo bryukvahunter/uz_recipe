@@ -16,7 +16,7 @@ import SignInModal from "../modals/SignInModal";
 import SignUpForm from "../forms/SignUpForm";
 import { useState } from "react";
 import SignUpModal from "../modals/SignUpModal";
-import { tr } from "framer-motion/client";
+import { signOutFn } from "@/auth/actions/signOut";
 
 export const AcmeLogo = () => {
   return (
@@ -38,6 +38,10 @@ export default function Header() {
 
   const [isSignInOpen, setIsSignInOpen] = useState(false);
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
+
+  async function handleSignOut() {
+    await signOutFn();
+  }
 
   return (
     <Navbar style={{ height: `${layoutConfig.headerHeight}` }}>
@@ -66,6 +70,17 @@ export default function Header() {
       </NavbarContent>
 
       <NavbarContent justify="end">
+        <NavbarItem className="hidden lg:flex">
+          <Button
+            as={Link}
+            color="primary"
+            href="#"
+            variant="flat"
+            onPress={handleSignOut}
+          >
+            Выйти
+          </Button>
+        </NavbarItem>
         <NavbarItem className="hidden lg:flex">
           <Button
             as={Link}

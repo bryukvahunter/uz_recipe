@@ -5,6 +5,8 @@ import { HeroUiProvider } from "@/provider/HeroUiProvider";
 import Header from "@/components/UI/Header";
 import { siteConfig } from "@/config/site.config";
 import { layoutConfig } from "@/config/layout.config";
+import { SessionProvider } from "next-auth/react";
+import { auth } from "@/auth/auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,32 +23,35 @@ export const metadata: Metadata = {
   description: siteConfig.description,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <HeroUiProvider>
-          <Header />
-          <main
-            className="flex flex-col  w-full justify-start items-center"
-            style={{
-              height: `calc(100vh - ${layoutConfig.headerHeight} - ${layoutConfig.footerHeight})`,
-            }}
-          >
-            {children}
-          </main>
-          <footer
-            className="flex justify-center items-center "
-            style={{ height: `${layoutConfig.footerHeight}` }}
-          >
-            {siteConfig.description}
-          </footer>
+          <SessionProvider session={session}>
+            <Header />
+            <main
+              className="flex flex-col  w-full justify-start items-center"
+              style={{
+                minHeight: `calc(100vh - ${layoutConfig.headerHeight} - ${layoutConfig.footerHeight})`,
+              }}
+            >
+              {children}
+            </main>
+            <footer
+              className="flex justify-center items-center "
+              style={{ height: `${layoutConfig.footerHeight}` }}
+            >
+              {siteConfig.description}
+            </footer>
+          </SessionProvider>
         </HeroUiProvider>
       </body>
     </html>

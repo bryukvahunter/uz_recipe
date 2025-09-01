@@ -1,5 +1,6 @@
 "use client";
 
+import { signImWithCredentials } from "@/auth/actions/signIn";
 import { Button } from "@heroui/button";
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
@@ -24,10 +25,12 @@ const formData: formDataState = {
 export default function SignInForm({ onClose }: Props) {
   const [form, setForm] = useState(formData);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     console.log("form submitted", form);
+    const result = await signImWithCredentials(form.email, form.password);
+    console.log(result);
     onClose();
   }
 

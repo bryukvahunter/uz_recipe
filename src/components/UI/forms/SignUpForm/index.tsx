@@ -1,12 +1,13 @@
 "use client";
 
-import { validateEmail } from "@/utils/helpers";
+import { validateEmail } from "@/utils/helpers.common";
 import { Button } from "@heroui/button";
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
 import React, { useState } from "react";
 import { FormDataState } from "@/types/signUp";
 import { signUpUser } from "@/actions/signUp";
+import { tr } from "zod/locales";
 
 interface Props {
   onClose: () => void;
@@ -23,9 +24,13 @@ export default function SignUpForm({ onClose }: Props) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    try {
+      const resultSignUp = await signUpUser(form);
+      console.log(resultSignUp);
+    } catch (error) {
+      console.error(error);
+    }
 
-    const resultSignUp = await signUpUser(form);
-    console.log(resultSignUp);
     onClose();
   }
 
